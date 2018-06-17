@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { AppRegistry, StyleSheet, Text, ScrollView, View, Image } from 'react-native';
-import FlexDimensionsBasicsComponent from './src/components/FlexDimensionsBasicsComponent';
-import AlignItemsComponent from './src/components/AlignItemsComponent';
+// import FlexDimensionsBasicsComponent from './src/components/FlexDimensionsBasicsComponent';
+// import AlignItemsComponent from './src/components/AlignItemsComponent';
 import VideoScreenComponent from './src/components/screens/VideoScreenComponent';
 import HomeScreenComponent from './src/components/screens/HomeScreenComponent';
 import { createStackNavigator } from 'react-navigation';

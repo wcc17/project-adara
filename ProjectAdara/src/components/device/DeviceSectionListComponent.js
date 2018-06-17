@@ -1,21 +1,42 @@
 import React, { Component } from 'react';
 import { SectionList, StyleSheet, Text, View } from 'react-native';
 import DeviceSectionListButtonComponent from './DeviceSectionListButtonComponent';
+import Device from '../../models/Device';
 
 export default class DeviceSectionListComponent extends Component {
     render() {
-        console.log(this.props.cameras);
-        console.log(this.props.sensors);
-        console.log(this.props.microphones);
-        console.log(this.props.locks);
+        let deviceList = this.props.devices;
+
+        let cameras = [];
+        let microphones = [];
+        let sensors = [];
+        let locks = [];
+        let deviceType = Device.DeviceType();
+        for(i = 0; i < deviceList.length; i++) {
+            switch(deviceList[i].props.type) {
+                case deviceType.CAMERA:
+                    cameras.push(deviceList[i]);
+                    break;
+                case deviceType.MICROPHONE:
+                    microphones.push(deviceList[i]);
+                    break;
+                case deviceType.SENSOR:
+                    sensors.push(deviceList[i]);
+                    break;
+                case deviceType.LOCK:
+                    locks.push(deviceList[i]);
+                    break;
+            }
+        }
+
         return (
             <View style={styles.container}>
                 <SectionList
                     sections={[
-                        { title: 'Cameras', data: this.props.cameras },
-                        { title: 'Sensors', data: this.props.sensors },
-                        { title: 'Microphones', data: this.props.microphones },
-                        { title: 'Locks', data: this.props.locks }
+                        { title: 'Cameras', data: cameras },
+                        { title: 'Sensors', data: sensors },
+                        { title: 'Microphones', data: microphones },
+                        { title: 'Locks', data: locks }
                     ]}
 
                     //passing 'item' as renderItem, which will be one of the devices in the prop arrays

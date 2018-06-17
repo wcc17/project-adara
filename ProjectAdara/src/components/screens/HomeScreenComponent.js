@@ -1,10 +1,8 @@
 import React, { Component } from 'react';
-import { View, StyleSheet, Text, Image, Button } from 'react-native';
+import { View, StyleSheet, ActivityIndicator } from 'react-native';
 import BaseScreenComponent from './BaseScreenComponent';
 import ScrollScreenComponent from './ScrollScreenComponent';
-import FlexDimensionsBasicsComponent from '../FlexDimensionsBasicsComponent';
-import AlignItemsComponent from '../AlignItemsComponent';
-import DeviceSectionListComponent from '../DeviceSectionListComponent';
+import DeviceSectionListComponent from '../device/DeviceSectionListComponent';
 import Device from '../../models/Device.js';
 
 export default class HomeScreenComponent extends Component {
@@ -12,26 +10,49 @@ export default class HomeScreenComponent extends Component {
         title: 'Home'
     }
 
+    state = {
+        isLoading: true,
+    }
+
+    componentDidMount() {
+        return fetch('http://localhost:8080/deviceList?customerId=0123')
+            .then((response) => response.json())
+            .then((responseJson) => {
+
+                this.setState({
+                    isLoading: false,
+                    deviceList: responseJson,
+                }, function() {
+                    //do something with the return json here?
+                    //this happens after render method completes
+                });
+        })
+        .catch((error) => {
+            //TODO: show error, application just crashes here if rest service can't be reached
+            //**see this guys ApiUtil: https://medium.com/@yoniweisbrod/interacting-with-apis-using-react-native-fetch-9733f28566bb
+            console.error(error);
+        });
+    }
+
     render() {
-        var cameras = [
-            <Device type={Device.DeviceType().CAMERA} name='Camera 1' url='https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4'/>,
-            <Device type={Device.DeviceType().CAMERA} name='Camera 2' url='https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4'/>,
-            <Device type={Device.DeviceType().CAMERA} name='Camera 3' url='https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4'/>,
-        ]
-        var microphones = [
-            <Device type={Device.DeviceType().MICROPHONE} name='Microphone 1'/>,
-            <Device type={Device.DeviceType().MICROPHONE} name='Microphone 2'/>,
-        ]
-        var sensors = [
-            <Device type={Device.DeviceType().SENSOR} name='Sensor 1'/>,
-            <Device type={Device.DeviceType().SENSOR} name='Sensor 2'/>,
-            <Device type={Device.DeviceType().SENSOR} name='Sensor 3'/>,
-            <Device type={Device.DeviceType().SENSOR} name='Sensor 4'/>,
-            <Device type={Device.DeviceType().SENSOR} name='Sensor 5'/>,
-        ]
-        var locks = [
-            <Device type={Device.DeviceType().LOCK} name='Lock 1'/>,
-        ]
+        if(this.state.isLoading == true) {
+            return(
+                //TODO: center in middle of screen
+                <View styles={styles.isLoadingStyle}>
+                    <ActivityIndicator/>
+                </View>
+            )
+        }
+
+        var devices = [];
+        var deviceList = this.state.deviceList;
+        for(i = 0; i < deviceList.length; i++) {
+            devices.push(<Device id={deviceList[i].deviceId}
+                type={deviceList[i].deviceType}
+                name={deviceList[i].deviceName}
+                url={deviceList[i].deviceUrl}/>
+            );
+        }
 
         return (
             <BaseScreenComponent>
@@ -39,10 +60,7 @@ export default class HomeScreenComponent extends Component {
                     <View styles={styles.homeScreenComponentStyle}>
                         <DeviceSectionListComponent
                             onClick={(device) => this.handleNavigationOnClick(device)} //=> is imortant as it causes function call to come from this scope instead of the nested component
-                            cameras={cameras}
-                            microphones={microphones}
-                            sensors={sensors}
-                            locks={locks}
+                            devices={devices}
                         />
                     </View>
                 </ScrollScreenComponent>
@@ -59,23 +77,23 @@ export default class HomeScreenComponent extends Component {
         //TODO: maybe the first thing to move to its own container and leave rendering to component
         switch(device.props.type) {
             case deviceType.CAMERA:
-                console.log('is camera');
                 this.props.navigation.navigate('Video', { device })
                 break;
             case deviceType.MICROPHONE:
-                console.log('is microphone');
                 break;
             case deviceType.SENSOR:
-                console.log('is sensor');
                 break;
             case deviceType.LOCK:
-                console.log('is lock');
                 break;
         }
     }
 }
 
 const styles = StyleSheet.create({
+    isLoadingStyle: {
+        flex: 1,
+        padding: 20,
+    },
     homeScreenComponentStyle: {
         flex: 1,
         backgroundColor: '#fff',

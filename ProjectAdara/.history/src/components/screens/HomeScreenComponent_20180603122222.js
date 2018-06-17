@@ -11,7 +11,7 @@ export default class HomeScreenComponent extends Component {
     static navigationOptions = {
         title: 'Home'
     }
-    
+
     state = {
         //TODO: will eventually be loaded via REST api and will have its own model object
         // deviceList: [new Device(Device.deviceType.CAMERA, 'Camera 1')]
@@ -23,7 +23,6 @@ export default class HomeScreenComponent extends Component {
     }
 
     render() {
-        console.log(Device.deviceType);
         return (
             <BaseScreenComponent>
                 <ScrollScreenComponent>

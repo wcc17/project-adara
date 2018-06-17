@@ -2,12 +2,11 @@ import React, { Component } from 'react';
 import { View, StyleSheet, Text, TouchableOpacity, Dimensions } from 'react-native';
 import Video from 'react-native-video';
 import BaseScreenComponent from './screens/BaseScreenComponent';
-import DeviceInfoComponent from './DeviceInfoComponent';
+import DeviceInfoComponent from './device/DeviceInfoComponent';
 
 export default class VideoComponent extends Component {
 
     render() {
-        console.log(this.props.device);
         let device = this.props.device;
         let name = device.props.name;
         let url = device.props.url;
