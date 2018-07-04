@@ -1,19 +1,8 @@
 import React, { Component } from 'react';
 import { View, StyleSheet } from 'react-native';
-import VideoComponent from '../VideoComponent';
+import VideoComponent from '../video/VideoComponent';
 
 export default class VideoScreenComponent extends Component {
-
-    // static navigationOptions = ({ navigation }) => {
-    //     return {
-    //         title: {{navigation.getParam('title', 'Invalid Video'),}}
-    //     };
-    // };
-
-    // static navigationOptions = {
-    //     title: this.props.navigation.getParam('device').name
-    // }
-
     render() {
         return (
             <View style={styles.viewStyle}>
@@ -21,8 +10,9 @@ export default class VideoScreenComponent extends Component {
                     device={
                         this.props.navigation.getParam('device', null) //TODO: check for null?
                     }
-                    // url={
-                    //     this.props.navigation.getParam('url', 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4')
+                    url={
+                        this.props.navigation.getParam('deviceUrl', null)
+                    }
                 />
             </View>
         );
