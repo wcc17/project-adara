@@ -7,6 +7,7 @@ export default class BaseScreenComponent extends Component {
     }
 
     render() {
+        //Generally base screen component should be used in the container, not in the component
         //BaseScreen > ScrollScreen > Other screens
         //BaseScreen > Other screens
         let children = this.props.children;
@@ -20,7 +21,7 @@ export default class BaseScreenComponent extends Component {
 
 const styles = StyleSheet.create({
     baseScreenView: {
-        flex: 1, 
+        flex: 1,
         backgroundColor: '#ffff',
     }
 });

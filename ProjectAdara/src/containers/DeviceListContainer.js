@@ -1,13 +1,12 @@
 import React, { Component } from 'react';
 import { View, StyleSheet, ActivityIndicator } from 'react-native';
-import BaseScreenComponent from './BaseScreenComponent';
-import ScrollScreenComponent from './ScrollScreenComponent';
-import DeviceSectionListComponent from '../device/DeviceSectionListComponent';
-import Device from '../../models/Device.js';
+import BaseScreenComponent from '../components/BaseScreenComponent';
+import DeviceListComponent from '../components/DeviceListComponent.js'
+import Device from '../models/Device.js';
 
-export default class HomeScreenComponent extends Component {
+export default class DeviceListContainer extends Component {
     static navigationOptions = {
-        title: 'Home'
+        title: 'DeviceList'
     }
 
     state = {
@@ -18,11 +17,11 @@ export default class HomeScreenComponent extends Component {
         return fetch('http://localhost:8080/deviceList?customerId=0123')
             .then((response) => response.json())
             .then((responseJson) => {
-
                 this.setState({
-                    isLoading: false,
-                    deviceList: responseJson,
-                }, function() { });
+                    deviceListResponse: responseJson,
+                }, function() {
+                    this.buildDeviceList();
+                });
         })
         .catch((error) => {
             //TODO: show error, application just crashes here if rest service can't be reached
@@ -31,8 +30,23 @@ export default class HomeScreenComponent extends Component {
         });
     }
 
+    buildDeviceList() {
+        var devices = [];
+        var tempDeviceList = this.state.deviceListResponse;
+        for(i = 0; i < tempDeviceList.length; i++) {
+            devices.push(<Device id={tempDeviceList[i].deviceId}
+                type={tempDeviceList[i].deviceType}
+                name={tempDeviceList[i].deviceName}/>
+            );
+        }
+
+        this.setState({
+            deviceList: devices,
+            isLoading: false,
+        })
+    }
+
     getDeviceUrlAndHandleNavigation(device) {
-        this.setState({ isLoading: true });
         this.retrieveDeviceUrl(device);
     }
 
@@ -61,7 +75,6 @@ export default class HomeScreenComponent extends Component {
     handleNavigationOnClick(device, url) {
         let deviceType = Device.DeviceType();
 
-        //TODO: maybe the first thing to move to its own container and leave rendering to component
         switch(device.props.type) {
             case deviceType.CAMERA:
                 this.props.navigation.navigate('Video', {
@@ -82,45 +95,28 @@ export default class HomeScreenComponent extends Component {
         if(this.state.isLoading == true) {
             return(
                 //TODO: center in middle of screen
-                <View styles={styles.isLoadingStyle}>
-                    <ActivityIndicator/>
-                </View>
-            )
-        }
-
-        var devices = [];
-        var deviceList = this.state.deviceList;
-        for(i = 0; i < deviceList.length; i++) {
-            devices.push(<Device id={deviceList[i].deviceId}
-                type={deviceList[i].deviceType}
-                name={deviceList[i].deviceName}/>
+                <BaseScreenComponent>
+                    <View styles={styles.isLoadingStyle}>
+                        <ActivityIndicator/>
+                    </View>
+                </BaseScreenComponent>
+            );
+        } else {
+            return(
+                <BaseScreenComponent>
+                    <DeviceListComponent
+                        devices={this.state.deviceList}
+                        onClick={(device) => this.getDeviceUrlAndHandleNavigation(device)} //=> is important as it causes function call to come from this scope instead of the nested component
+                    />
+                </BaseScreenComponent>
             );
         }
-
-        return (
-            <BaseScreenComponent>
-                <ScrollScreenComponent>
-                    <View styles={styles.homeScreenComponentStyle}>
-                        <DeviceSectionListComponent
-                            onClick={(device) => this.getDeviceUrlAndHandleNavigation(device)} //=> is imortant as it causes function call to come from this scope instead of the nested component
-                            devices={devices}
-                        />
-                    </View>
-                </ScrollScreenComponent>
-            </BaseScreenComponent>
-        );
     }
 }
 
 const styles = StyleSheet.create({
     isLoadingStyle: {
         flex: 1,
-        padding: 20,
-    },
-    homeScreenComponentStyle: {
-        flex: 1,
-        backgroundColor: '#fff',
-        alignItems: 'center',
-        paddingVertical: 20,
+        padding: 20
     },
 });

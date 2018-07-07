@@ -1,11 +1,9 @@
 import React, { Component } from 'react';
 import { AppRegistry, StyleSheet, Text, ScrollView, View, Image } from 'react-native';
-// import FlexDimensionsBasicsComponent from './src/components/FlexDimensionsBasicsComponent';
-// import AlignItemsComponent from './src/components/AlignItemsComponent';
-import VideoScreenComponent from './src/components/screens/VideoScreenComponent';
-import HomeScreenComponent from './src/components/screens/HomeScreenComponent';
 import { createStackNavigator } from 'react-navigation';
 import { YellowBox } from 'react-native'
+import DeviceContainer from './src/containers/DeviceContainer';
+import DeviceListContainer from './src/containers/DeviceListContainer';
 
 export default class ProjectAdara extends React.Component {
     render() {
@@ -17,8 +15,8 @@ export default class ProjectAdara extends React.Component {
 
 const Root = createStackNavigator(
     {
-        Home: HomeScreenComponent,
-        Video: VideoScreenComponent,
+        Home: DeviceListContainer,
+        Video: DeviceContainer,
     },
     {
         initialRouteName: 'Home',

@@ -11,12 +11,6 @@ export default class DeviceSectionListButtonComponent extends Component {
                     <Text style={this.props.itemTextStyle}>{this.props.device}</Text>
                 </View>
             </TouchableOpacity>
-                // <Button
-                //     title="Go to Video"
-                //     onPress={() =>
-                //         this.props.callback();
-                //     }
-                // />
         );
     }
 }
