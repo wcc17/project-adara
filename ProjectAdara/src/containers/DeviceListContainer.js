@@ -34,9 +34,9 @@ export default class DeviceListContainer extends Component {
         var devices = [];
         var tempDeviceList = this.state.deviceListResponse;
         for(i = 0; i < tempDeviceList.length; i++) {
-            devices.push(<Device id={tempDeviceList[i].deviceId}
-                type={tempDeviceList[i].deviceType}
-                name={tempDeviceList[i].deviceName}/>
+            devices.push(<Device id={tempDeviceList[i].id}
+                type={tempDeviceList[i].type}
+                name={tempDeviceList[i].name}/>
             );
         }
 
